@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 3,
+  "minCindyVersion": "0.1.141",
+  "id": "tencent-docs",
+  "name": "腾讯文档",
+  "description": "连接腾讯文档个人版或企业版，用自然语言查找、阅读、创建和编辑在线文档、Word、Excel、幻灯片、智能表格、思维导图与流程图，整理文件夹和分享，也能把本机文件或网页导入腾讯文档、识别图片文字。通过腾讯文档官方 MCP 服务完成，登录凭证由 Cindy 加密保管。",
+  "whenToUse": "需要在腾讯文档里搜索或打开文档、总结或改写内容、新建或编辑在线文档、Word、Excel、幻灯片、智能表格、思维导图、流程图，整理文件夹或知识库、修改分享权限，把本机文件或 HTML 页面导入腾讯文档，识别图片文字，或用户给出 docs.qq.com 链接时找我。",
+  "version": "0.2.0",
+  "releaseNotes": "首个公开版本。连接腾讯文档个人版与企业版，接入官方 MCP 主服务和 Word、Excel、幻灯片三个专用服务；支持本机文件与 HTML 导入、图片文字识别、上传图片；可选个人 Token 补充删除、移动、改分享等管理权限；附带完整使用手册。",
+  "author": "Cindy",
+  "icon": "assets/icon.png",
+  "readme": {
+    "en": "README.en.md",
+    "zh-CN": "README.md"
+  },
+  "entry": "main.js",
+  "launch": "on-demand",
+  "command": "tencent-docs",
+  "settingsHtml": "settings.html",
+  "githubRelease": "MagicLizi/cindy-tencent-docs-plugin",
+  "locales": {
+    "en": "locales/en.json",
+    "zh-CN": "locales/zh-CN.json"
+  },
+  "network": {
+    "hosts": [
+      "docs.qq.com",
+      "saas.docs.qq.com"
+    ],
+    "secrets": [
+      {
+        "key": "tencent_docs_account",
+        "label": "腾讯文档个人版账号",
+        "source": "oauth",
+        "hint": "用 QQ 或微信登录的个人账号：点「连接账号」后在浏览器中登录腾讯文档并同意授权",
+        "inject": {
+          "header": "Authorization",
+          "format": "Bearer {value}",
+          "hosts": [
+            "docs.qq.com"
+          ]
+        },
+        "oauth": {
+          "authorizeUrl": "https://docs.qq.com/scenario/open-claw.html?authType=2",
+          "tokenUrl": "https://docs.qq.com/openapi/mcp/oauth/token",
+          "clientId": "a93cba6d445669fa2e13ddbd95bf31c1",
+          "scopes": [
+            "docs:read",
+            "docs:write"
+          ],
+          "pkce": true,
+          "redirectPort": 38417,
+          "extraAuthorizeParams": {
+            "resource": "https://docs.qq.com/openapi/mcp"
+          }
+        }
+      },
+      {
+        "key": "tencent_docs_saas_account",
+        "label": "腾讯文档企业版账号",
+        "source": "oauth",
+        "hint": "企业版（saas.docs.qq.com）账号：点「连接账号」后在浏览器中用企业账号登录并同意授权",
+        "inject": {
+          "header": "Authorization",
+          "format": "Bearer {value}",
+          "hosts": [
+            "saas.docs.qq.com"
+          ]
+        },
+        "oauth": {
+          "authorizeUrl": "https://saas.docs.qq.com/scenario/open-claw.html?authType=2",
+          "tokenUrl": "https://saas.docs.qq.com/api/v6/open/agent/mcp/oauth/token",
+          "clientId": "5608851e777608c2be2d498422b5265a",
+          "scopes": [
+            "docs:read",
+            "docs:write"
+          ],
+          "pkce": true,
+          "redirectPort": 38418,
+          "extraAuthorizeParams": {
+            "resource": "https://saas.docs.qq.com/api/v6/open/agent/mcp"
+          }
+        }
+      }
+    ]
+  },
+  "node": {
+    "entry": "node/worker.cjs",
+    "protocol": "json-rpc-stdio",
+    "lifecycle": "on-demand",
+    "idleTimeoutSeconds": 300,
+    "secretBindings": [
+      {
+        "key": "personal_token",
+        "label": "腾讯文档个人版账号",
+        "methods": [
+          "personal/local"
+        ],
+        "oauthSecret": "tencent_docs_account"
+      },
+      {
+        "key": "enterprise_token",
+        "label": "腾讯文档企业版账号",
+        "methods": [
+          "enterprise/local"
+        ],
+        "oauthSecret": "tencent_docs_saas_account"
+      },
+      {
+        "key": "personal_mcp_token",
+        "label": "腾讯文档个人 Token（补充管理权限）",
+        "methods": [
+          "personal/token-call"
+        ],
+        "hint": "可选。删除、移动、改分享权限等操作需要管理权限，一键登录拿不到；在腾讯文档开放平台复制个人 Token 填在这里，请用和一键登录相同的账号",
+        "url": "https://docs.qq.com/open/auth/mcp.html"
+      }
+    ]
+  },
+  "setup": {
+    "requires": [
+      {
+        "anyOf": [
+          "secret:tencent_docs_account",
+          "secret:tencent_docs_saas_account"
+        ]
+      }
+    ]
+  },
+  "manual": {
+    "items": [
+      {
+        "dir": "manual/guide",
+        "name": "guide",
+        "description": "腾讯文档插件的完整用法：个人版与企业版、四个服务的分工、按需求选新建方式、智能文档 MDX 写法、Word/表格/幻灯片/智能表格操作、文件与知识库、OCR、剪藏、本机文件导入和错误处理。"
+      }
+    ]
+  },
+  "tools": [
+    {
+      "name": "list_tools",
+      "description": "向腾讯文档官方 MCP 服务（个人版 docs.qq.com / 企业版 saas.docs.qq.com）实时查询当前可用的操作（只读，不改动任何文档）。不传 category 返回类目概览（类目、中文名、数量、示例操作名、各服务状态）；传 category 返回该类目全部操作的名称、说明、是否只读、完整参数 schema，以及调用前必须遵守的 RULES。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "类目名，取自不带参数调用时返回的 categories[].category；不传则返回概览"
+          },
+          "edition": {
+            "type": "string",
+            "enum": [
+              "personal",
+              "enterprise"
+            ],
+            "description": "personal = 个人版，enterprise = 企业版。只连接了其中一个时省略；两个都连接时必须先问用户要操作哪一个"
+          }
+        }
+      }
+    },
+    {
+      "name": "call_tool",
+      "description": "通过腾讯文档官方 MCP 服务执行一个具体操作，会以已连接的腾讯文档账号身份读取或修改用户的在线文档、Word、Excel、幻灯片、智能表格、文件夹、知识库与分享权限。name 必须来自 list_tools(category) 的返回；args 按该操作的参数 schema 传 JSON 对象。创建、修改、删除、移动、改权限等写入操作只在用户明确要求时调用。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "操作名，必须逐字取自 list_tools(category) 返回的 tools[].name"
+          },
+          "args": {
+            "type": "object",
+            "description": "操作参数，按该操作的 parameters schema 填写；不确定时先查 list_tools(category)"
+          },
+          "edition": {
+            "type": "string",
+            "enum": [
+              "personal",
+              "enterprise"
+            ],
+            "description": "与 list_tools 相同；两个版本都连接时必须传"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    {
+      "name": "local_files",
+      "description": "读取用户电脑上指定路径的文件，上传到腾讯文档（经腾讯文档服务和它返回的腾讯云存储上传地址）。action：import_file = 把本机文件（Word、Excel、PPT、PDF、Markdown 等）导入为腾讯文档在线文档；import_html = 把本机 HTML 页面（单个文件连同同级 assets 目录，或整个目录）打包导入；ocr_extract = 识别一张图片里的文字；ocr_to_word / ocr_to_excel = 把 1–9 张图片转成在线文档或表格；upload_image = 上传图片拿到 imageID 供文档或智能表格插图。只在用户要求处理这些本机文件时调用。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "import_file",
+              "import_html",
+              "ocr_extract",
+              "ocr_to_word",
+              "ocr_to_excel",
+              "upload_image"
+            ],
+            "description": "要做的事，见工具说明"
+          },
+          "path": {
+            "type": "string",
+            "description": "本机文件或目录的完整路径（import_html 可传 HTML 文件或其所在目录）"
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "仅 ocr_to_word / ocr_to_excel：多张图片的完整路径，按页面顺序，最多 9 张"
+          },
+          "title": {
+            "type": "string",
+            "description": "可选：导入后文档的标题（import_html、ocr_to_word、ocr_to_excel）"
+          },
+          "extract_type": {
+            "type": "string",
+            "enum": [
+              "basic",
+              "accurate",
+              "efficient"
+            ],
+            "description": "仅 ocr_extract：basic 通用（缺省）、accurate 高精度、efficient 快速"
+          },
+          "with_positions": {
+            "type": "boolean",
+            "description": "仅 ocr_extract：是否同时返回每段文字在图中的位置"
+          },
+          "edition": {
+            "type": "string",
+            "enum": [
+              "personal",
+              "enterprise"
+            ],
+            "description": "与 list_tools 相同；两个版本都连接时必须传"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      }
+    }
+  ]
+}

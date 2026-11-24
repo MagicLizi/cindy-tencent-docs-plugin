@@ -1,0 +1,84 @@
+{
+  "name": "Tencent Docs",
+  "description": "Connect Tencent Docs Personal or Enterprise to find, read, create and edit docs, Word, Excel, slides, smart sheets, mind maps and flowcharts, organize folders and sharing, import local files or web pages, and run OCR. Uses the official Tencent Docs MCP service.",
+  "whenToUse": "Use for Tencent Docs: search or open files, summarize or rewrite content, create or edit docs, Word, Excel, slides, smart sheets, mind maps or flowcharts, organize folders or spaces, change sharing, import local files or HTML pages, OCR images, or when the user shares a docs.qq.com link.",
+  "tools": {
+    "list_tools": {
+      "description": "Query the official Tencent Docs MCP service (Personal docs.qq.com / Enterprise saas.docs.qq.com) for the actions available right now (read-only). Without category, returns a category overview with labels, counts, sample action names and service status. With category, returns every action in it with its description, whether it is read-only, the full parameter schema, and the RULES to follow before calling.",
+      "parameters": {
+        "/properties/category": {
+          "description": "Category name from categories[].category in the overview. Omit to get the overview."
+        },
+        "/properties/edition": {
+          "description": "personal = Personal, enterprise = Enterprise. Omit when only one is connected; when both are connected, ask the user which one first."
+        }
+      }
+    },
+    "call_tool": {
+      "description": "Run one action through the official Tencent Docs MCP service, reading or changing the user's docs, Word, Excel, slides, smart sheets, folders, spaces and sharing as the connected Tencent Docs account. name must come from list_tools(category); pass args as a JSON object matching that action's schema. Only call create, edit, delete, move or permission-changing actions when the user explicitly asks.",
+      "parameters": {
+        "/properties/name": {
+          "description": "Action name, copied exactly from tools[].name returned by list_tools(category)."
+        },
+        "/properties/args": {
+          "description": "Action arguments following that action's parameters schema. Check list_tools(category) first if unsure."
+        },
+        "/properties/edition": {
+          "description": "Same as list_tools. Required when both editions are connected."
+        }
+      }
+    },
+    "local_files": {
+      "description": "Read files at the given paths on the user's computer and upload them to Tencent Docs (through the Tencent Docs service and the Tencent Cloud storage upload address it returns). action: import_file = import a local Word, Excel, PPT, PDF, Markdown or similar file as an online doc; import_html = package and import a local HTML page (a file with its sibling assets folder, or a whole folder); ocr_extract = read text from one image; ocr_to_word / ocr_to_excel = turn 1–9 images into an online doc or sheet; upload_image = upload an image and get an imageID for docs or smart sheets. Only call when the user asks to process these local files.",
+      "parameters": {
+        "/properties/action": {
+          "description": "What to do; see the tool description."
+        },
+        "/properties/path": {
+          "description": "Full path of the local file or folder (import_html accepts an HTML file or its folder)."
+        },
+        "/properties/paths": {
+          "description": "ocr_to_word / ocr_to_excel only: full paths of the images in page order, up to 9."
+        },
+        "/properties/title": {
+          "description": "Optional title for the imported document (import_html, ocr_to_word, ocr_to_excel)."
+        },
+        "/properties/extract_type": {
+          "description": "ocr_extract only: basic (default), accurate or efficient."
+        },
+        "/properties/with_positions": {
+          "description": "ocr_extract only: also return where each piece of text sits in the image."
+        },
+        "/properties/edition": {
+          "description": "Same as list_tools. Required when both editions are connected."
+        }
+      }
+    }
+  },
+  "network": {
+    "secrets": {
+      "tencent_docs_account": {
+        "label": "Tencent Docs Personal account",
+        "hint": "Personal account signed in with QQ or Weixin: click Connect account, sign in to Tencent Docs in your browser and approve access."
+      },
+      "tencent_docs_saas_account": {
+        "label": "Tencent Docs Enterprise account",
+        "hint": "Enterprise (saas.docs.qq.com) account: click Connect account, sign in with your enterprise account in your browser and approve access."
+      }
+    }
+  },
+  "node": {
+    "secretBindings": {
+      "personal_token": {
+        "label": "Tencent Docs Personal account"
+      },
+      "enterprise_token": {
+        "label": "Tencent Docs Enterprise account"
+      },
+      "personal_mcp_token": {
+        "label": "Tencent Docs personal Token (adds management access)",
+        "hint": "Optional. Adds management access (delete, move, sharing) that one-click sign-in lacks. Copy it from the Tencent Docs open platform using the same account."
+      }
+    }
+  }
+}
