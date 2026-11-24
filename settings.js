@@ -204,7 +204,12 @@
       img.src = account.avatarDataUrl;
       avatar.appendChild(img);
     } else {
-      avatar.textContent = locale === 'zh-CN' ? (section.id === 'enterprise' ? '企' : '个') : (section.id === 'enterprise' ? 'E' : 'P');
+      // 腾讯文档不提供账号头像，用插件图标代替（单字头像缩小后容易被看成箭头）。
+      var icon = document.createElement('img');
+      icon.alt = '';
+      icon.src = '/assets/icon.png';
+      icon.className = 'avatar-icon';
+      avatar.appendChild(icon);
     }
     row.appendChild(avatar);
 
