@@ -6,7 +6,7 @@
 // Word 文档、在线表格、幻灯片专用服务。登录由 Cindy 托管 OAuth 完成，
 // access token 只由宿主注入请求头，本文件拿不到也不保存任何凭证。
 
-const VERSION = '0.2.1';
+const VERSION = '0.2.2';
 const PROTOCOL_VERSION = '2025-06-18';
 const CLIENT_INFO = { name: 'cindy-tencent-docs', version: VERSION };
 const CHANNEL = 'tencent-docs';

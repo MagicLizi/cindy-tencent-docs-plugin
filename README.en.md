@@ -1,5 +1,7 @@
 # Tencent Docs plugin (tencent-docs)
 
+> Unofficial third-party plugin, built and maintained by MagicLizi. Not made by Tencent.
+
 Lets Cindy read and write your Tencent Docs: find, read, summarize, create and edit docs, Word, Excel, slides,
 smart sheets, mind maps and flowcharts, organize folders, knowledge spaces and sharing, import local files or web
 pages, and read text from images.

@@ -15,7 +15,7 @@ const EDITIONS = {
   enterprise: { url: 'https://saas.docs.qq.com/api/v6/open/agent/mcp', secret: 'enterprise_token' },
 };
 const PROTOCOL_VERSION = '2025-06-18';
-const CLIENT_INFO = { name: 'cindy-tencent-docs', version: '0.2.1' };
+const CLIENT_INFO = { name: 'cindy-tencent-docs', version: '0.2.2' };
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.bmp', '.webp']);
 const UPLOAD_IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg']);
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
