@@ -1,5 +1,5 @@
 {
-  "name": "Tencent Docs (Unofficial)",
+  "name": "Tencent Docs",
   "description": "Unofficial plugin, not made by Tencent. Connect Tencent Docs Personal or Enterprise to find, read, create and edit docs, Word, Excel, slides, smart sheets, mind maps and flowcharts, organize folders and sharing, import local files or web pages, and run OCR via the official MCP service.",
   "whenToUse": "Use for Tencent Docs: search or open files, summarize or rewrite content, create or edit docs, Word, Excel, slides, smart sheets, mind maps or flowcharts, organize folders or spaces, change sharing, import local files or HTML pages, OCR images, or when the user shares a docs.qq.com link.",
   "tools": {
